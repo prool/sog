@@ -82,6 +82,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <iconv.h> // for UTF
 
 #if defined(SUNOS) || defined(SVR4) || defined(LINUX)
 #	include <crypt.h>
@@ -117,6 +118,7 @@ struct codepage codepages[] = {
 	{ "iso (ISO-8859-5)",	iso_koi8,	koi8_iso	},
 	{ "mac",		mac_koi8,	koi8_mac	},
 	{ "translit",		koi8_koi8,	koi8_vola	},
+	{ "UTF-8",		utf_koi8,	koi8_utf	} // prool: for UTF
 };
 #define NCODEPAGES (sizeof(codepages) / sizeof(struct codepage))
 
@@ -195,6 +197,9 @@ void	read_from_buffer	(DESCRIPTOR_DATA *d);
 void	stop_idling		(CHAR_DATA *ch);
 void    bust_a_prompt           (CHAR_DATA *ch);
 void 	log_area_popularity	(void);
+
+void koi_to_utf8(char *str_i, char *str_o); // prool: for UTF
+void utf8_to_koi(char *str_i, char *str_o);
 
 varr 	control_sockets = { sizeof(int), 2 };
 varr	info_sockets = { sizeof(int), 2 };
@@ -980,6 +985,8 @@ bool read_from_descriptor(DESCRIPTOR_DATA *d)
 void read_from_buffer(DESCRIPTOR_DATA *d)
 {
 	int i, j, k;
+	char prool_buf[MAX_STRING_LENGTH];
+	char prool_buf2[MAX_STRING_LENGTH];
 
 	/*
 	 * Hold horses if pending command already.
@@ -1439,12 +1446,26 @@ void write_to_buffer(DESCRIPTOR_DATA *d, const char *txt, uint length)
 	bool noiac = (d->connected == CON_PLAYING &&
 		      d->character != NULL &&
 		      IS_SET(d->character->comm, COMM_NOIAC));
+	char prool_buf[MAX_STRING_LENGTH];
+	char *txt_;
+
+	txt_ = prool_buf;
+
+	// UTF-8 processing by prool
+	if (d->codepage->from == utf_koi8)
+	{
+	for (i=0;i<MAX_STRING_LENGTH;i++) {prool_buf[i]=0;}
+	koi_to_utf8(txt, txt_);
+	length = strlen(txt_);
+	}
+	else
+		strcpy(txt_, txt);
 	
 	/*
 	 * Find length in case caller didn't.
 	 */
 	if (length <= 0)
-		length = strlen(txt);
+		length = strlen(txt_);
 
 	/*
 	 * Adjust size in case of IACs (they will be doubled)
@@ -1452,7 +1473,7 @@ void write_to_buffer(DESCRIPTOR_DATA *d, const char *txt, uint length)
 	size = length;
 	if (!noiac)
 		for (i = 0; i < length; i++)
-			if (d->codepage->to[(unsigned char) txt[i]] == IAC)
+			if (d->codepage->to[(unsigned char) txt_[i]] == IAC)
 				size++;
 
 	/*
@@ -1490,7 +1511,7 @@ void write_to_buffer(DESCRIPTOR_DATA *d, const char *txt, uint length)
 	while (length--) {
 		unsigned char c;
 
-		c = d->codepage->to[(unsigned char) *txt++];
+		c = d->codepage->to[(unsigned char) *txt_++];
 		d->outbuf[d->outtop] = c;
 		if (c == IAC)
 			if (noiac)
@@ -2702,3 +2723,54 @@ void gettimeofday (struct timeval *tp, void *tzp)
     tp->tv_usec = 0;
 }
 #endif
+
+// prool functions for UTF:
+
+void koi_to_utf8(char *str_i, char *str_o)
+{
+	iconv_t cd;
+	size_t len_i, len_o = MAX_STRING_LENGTH * 6;
+	size_t i;
+
+	if ((cd = iconv_open("UTF-8","KOI8-RU")) == (iconv_t) - 1)
+	{
+		printf("koi_to_utf8: iconv_open error\n");
+		return;
+	}
+	len_i = strlen(str_i);
+	if ((i = iconv(cd, &str_i, &len_i, &str_o, &len_o)) == (size_t) - 1)
+	{
+		printf("koi_to_utf8: iconv error\n");
+		return;
+	}
+	*str_o = 0;
+	if (iconv_close(cd) == -1)
+	{
+		printf("koi_to_utf8: iconv_close error\n");
+		return;
+	}
+}
+
+void utf8_to_koi(char *str_i, char *str_o)
+{
+	iconv_t cd;
+	size_t len_i, len_o = MAX_STRING_LENGTH * 6;
+	size_t i;
+
+	if ((cd = iconv_open("KOI8-RU", "UTF-8")) == (iconv_t) - 1)
+	{
+		printf("utf8_to_koi: iconv_open error\n");
+		return;
+	}
+	len_i = strlen(str_i);
+	if ((i=iconv(cd, &str_i, &len_i, &str_o, &len_o)) == (size_t) - 1)
+	{
+		printf("utf8_to_koi: iconv error\n");
+		// return;
+	}
+	if (iconv_close(cd) == -1)
+	{
+		printf("utf8_to_koi: iconv_close error\n");
+		return;
+	}
+}

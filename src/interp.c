@@ -52,8 +52,18 @@
 #include "olc/olc.h"
 #include "db/cmd.h"
 #include "db/socials.h"
+#include "charset.h" // prool: for UTF
 
 #undef IMMORTALS_LOGS
+
+// prool for UTF
+void utf8_to_koi(char *str_i, char *str_o);
+struct codepage 
+{
+	char* name;
+	unsigned char* from;
+	unsigned char* to;
+};
 
 void interpret_social(social_t *soc, CHAR_DATA *ch, const char *argument);
 
@@ -498,10 +508,22 @@ cmd_t cmd_table[] =
      { NULL }
 };
 
+char prool_buf_g[MAX_STRING_LENGTH];
 
 void interpret(CHAR_DATA *ch, const char *argument)
 {
-	interpret_raw(ch, argument, FALSE);
+	int i;
+
+	if (IS_NPC(ch))
+        	interpret_raw(ch, argument, FALSE);
+	else if (ch->desc->codepage->from == utf_koi8) // prool: UTF-8 processing
+		{
+		for (i=0;i<MAX_STRING_LENGTH;i++) prool_buf_g[i]=0;
+		utf8_to_koi(argument, prool_buf_g);
+        	interpret_raw(ch, prool_buf_g, FALSE);
+		}
+	else
+        	interpret_raw(ch, argument, FALSE);
 }
 
 /*

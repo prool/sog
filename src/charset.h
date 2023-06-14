@@ -31,6 +31,9 @@
 
 extern unsigned char koi8_koi8[256];
 
+extern unsigned char koi8_utf[256]; // prool: for UTF
+extern unsigned char utf_koi8[256];
+
 extern unsigned char alt_koi8[256];
 extern unsigned char koi8_alt[256];
 
