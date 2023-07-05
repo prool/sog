@@ -71,7 +71,7 @@ void info_newconn(int infofd)
 	}
 
 	if (getpeername(fd, (struct sockaddr *) &sock, &size) < 0) {
-		log_printf("info_newconn: getpeername: %s", strerror(errno));
+		//log_printf("info_newconn: getpeername: %s", strerror(errno)); // prool
 #ifdef WIN32
 		closesocket(fd);
 #else
@@ -80,7 +80,7 @@ void info_newconn(int infofd)
 		return;
 	}
 
-	log_printf("info_newconn: sock.sin_addr: %s", inet_ntoa(sock.sin_addr));
+	//log_printf("info_newconn: sock.sin_addr: %s", inet_ntoa(sock.sin_addr)); // prool
 
 	for (i = 0; i < info_trusted.nused; i++) {
 		struct in_addr* in_addr = VARR_GET(&info_trusted, i);
@@ -89,7 +89,7 @@ void info_newconn(int infofd)
 	}
 
 	if (i >= info_trusted.nused) {
-		log_printf("info_newconn: incoming connection refused");
+		//log_printf("info_newconn: incoming connection refused"); // prool
 #ifdef WIN32
 		closesocket(fd);
 #else

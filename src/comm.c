@@ -798,7 +798,7 @@ void init_descriptor(int control)
 	}
 #endif
 
-	log_printf("sock.sinaddr: %s", inet_ntoa(sock.sin_addr));
+	//log_printf("sock.sinaddr: %s", inet_ntoa(sock.sin_addr)); // prool
 
 	dnew->next		= descriptor_list;
 	descriptor_list		= dnew;
@@ -905,7 +905,7 @@ bool read_from_descriptor(DESCRIPTOR_DATA *d)
 				break;
 		}
 		else if (nRead == 0) {
-			log("EOF encountered on read.");
+			//log("EOF encountered on read."); // prool
 			return FALSE;
 			break;
 		}
@@ -917,7 +917,7 @@ bool read_from_descriptor(DESCRIPTOR_DATA *d)
 	    break;
 #endif
 		else {
-			log_printf("read_from_descriptor: %s", strerror(errno));
+			//log_printf("read_from_descriptor: %s", strerror(errno)); // prool
 			return FALSE;
 		}
 	}
