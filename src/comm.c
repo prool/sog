@@ -100,6 +100,17 @@
 #include "comm_colors.h"
 #include "db/lang.h"
 
+// begin prool
+void mssp_start(DESCRIPTOR_DATA * t);
+int prool_players ();
+#define MSSP			70
+#define MSSP_VAR		1
+#define MSSP_VAL		2
+unsigned char mssp_will[] = {(char) IAC, (char) WILL, (char) MSSP, '\0'};
+unsigned char eor_on_str      [] = { IAC, WILL, TELOPT_EOR, '\0' };
+long	boot_time;
+// end prool
+
 DESCRIPTOR_DATA	*	new_descriptor	(void);
 void			free_descriptor	(DESCRIPTOR_DATA *d);
 
@@ -274,6 +285,7 @@ int main(int argc, char **argv)
 	current_time 	= (time_t) now_time.tv_sec;
 	strnzcpy(str_boot_time, sizeof(str_boot_time), strtime(current_time));
 
+	boot_time = time(0); // prool
 	/*
 	 * Run the game.
 	 */
@@ -806,6 +818,8 @@ void init_descriptor(int control)
 	/*
 	 * Send the greeting.
 	 */
+
+	write_to_descriptor(dnew->descriptor, mssp_will, 0); // prool: MSSP WILL
 	if ((greeting = help_lookup(1, "GREETING"))) {
 		char buf[MAX_STRING_LENGTH];
 		parse_colors(mlstr_mval(greeting->text), buf, sizeof(buf),
@@ -940,22 +954,30 @@ bool read_from_descriptor(DESCRIPTOR_DATA *d)
 		if (d->wait_for_se)
 			goto wse;
 
-		switch (p[1]) {
-		case DONT:
+		switch (p[1])
+		{
 		case DO:
-		case WONT:
+			if(p[2] == MSSP) // prool: MSSP
+				{
+				mssp_start(d);
+				}
 		case WILL:
+		case DONT:
+		case WONT:
+
 			q = p+3;
 			break;
 
 		wse:
 		case SB:   
 			q = strchr(p, SE);
-			if (q == NULL) {
+			if (q == NULL) 
+			{
 				q = strchr(p, '\0');
 				d->wait_for_se = 1; 
 			}
-			else {
+			else 
+			{
 				q++; 
 				d->wait_for_se = 0; 
 			}
@@ -971,6 +993,7 @@ bool read_from_descriptor(DESCRIPTOR_DATA *d)
 			q = p+2;
 			break;
 		}
+
 		if ((r = strchr(p, '\0')) < q)
 			q = r;
 		memmove(p, q, strlen(q)+1);
@@ -2724,7 +2747,7 @@ void gettimeofday (struct timeval *tp, void *tzp)
 }
 #endif
 
-// prool functions for UTF:
+// prool functions:
 
 void koi_to_utf8(char *str_i, char *str_o)
 {
@@ -2773,4 +2796,101 @@ void utf8_to_koi(char *str_i, char *str_o)
 		printf("utf8_to_koi: iconv_close error\n");
 		return;
 	}
+}
+
+void mssp_start(DESCRIPTOR_DATA * t)
+{
+char buf[1024];
+int i, size;
+struct sockaddr_in sock;
+
+i=sprintf(buf,
+"%c%c%c%cPLAYERS%c%i%cNAME%cShades of Gray%cUPTIME%c%li%cCRAWL_DELAY%c-1\
+%cHOSTNAME%cmud.kharkov.org\
+%cPORT%c9000\
+%cCODEBASE%cAnatolia\
+%cCONTACT%cproolix@gmail.com\
+%cCREATED%c2023\
+%cIP%c195.123.245.173\
+%cLANGUAGE%cEnglish\
+%cLOCATION%cUkraine\
+%cMINIMUM AGE%c0\
+%cWEBSITE%chttp://mud.kharkov.org\
+%cFAMILY%cDikuMUD\
+%cAREAS%c%i\
+%cMOBILES%c%i\
+%cOBJECTS%c%i\
+%cROOMS%c%i\
+%cCLASSES%c12\
+%cRACES%c11\
+%cANSI%c1\
+%cMCCP%c0\
+%cMCP%c0\
+%cMSP%c0\
+%cMXP%c0\
+%cGMCP%c0\
+%cHIRING BUILDERS%c1\
+%cPLAYER CLANS%c1\
+%cWORLD ORIGINALITY%c1\
+%cLEVELS%c91\
+%c%c",
+IAC,SB,MSSP,MSSP_VAR,MSSP_VAL,prool_players(),MSSP_VAR,MSSP_VAL,MSSP_VAR,MSSP_VAL,(long int)boot_time,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,134 /*statistic_zones*/,
+MSSP_VAR,MSSP_VAL,0 /*statistic_mobs*/,
+MSSP_VAR,MSSP_VAL,0 /*statistic_objs*/,
+MSSP_VAR,MSSP_VAL,0 /*statistic_rooms*/,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,
+IAC,SE);
+
+	size = sizeof(sock);
+
+	if (getpeername(t->descriptor, (struct sockaddr *) &sock, &size) < 0) 
+	{
+		log_printf("prool debug MSSP module: getpeername: %s", strerror(errno));
+	}
+	else
+	{
+	log_printf("prool debug: MSSP: sock.sin_addr: %s", inet_ntoa(sock.sin_addr));
+	}
+
+write_to_descriptor(t->descriptor, buf, 0/*strlen(buf)*/);
+}
+
+int prool_players ()
+{
+        DESCRIPTOR_DATA *d;
+
+        int count = 0;
+
+		for (d = descriptor_list; d; d = d->next)
+		{
+				if (d->connected != CON_PLAYING)
+						continue;
+				count++;
+
+		}
+return count;
 }

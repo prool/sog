@@ -57,6 +57,7 @@ void	substitute_alias (DESCRIPTOR_DATA *d, const char *input);
  * Command functions.
  * Defined in act_*.c (mostly).
  */
+DECLARE_DO_FUN(do_prool         ); // prool
 DECLARE_DO_FUN(do_advance	);
 DECLARE_DO_FUN(do_affects	);
 DECLARE_DO_FUN(do_affrooms	);

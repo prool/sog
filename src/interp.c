@@ -56,7 +56,8 @@
 
 #undef IMMORTALS_LOGS
 
-// prool for UTF
+// begin prool
+int prool_players ();
 void utf8_to_koi(char *str_i, char *str_o);
 struct codepage 
 {
@@ -64,6 +65,7 @@ struct codepage
 	unsigned char* from;
 	unsigned char* to;
 };
+// end prool
 
 void interpret_social(social_t *soc, CHAR_DATA *ch, const char *argument);
 
@@ -180,6 +182,7 @@ cmd_t cmd_table[] =
     { "withdraw",	do_withdraw,	POS_STANDING,    0,  LOG_NORMAL	},
     { "wizlist",	do_wizlist,	POS_DEAD,        0,  LOG_NORMAL, CMD_KEEP_HIDE | CMD_CHARMED_OK },
     { "worth",		do_worth,	POS_SLEEPING,	 0,  LOG_NORMAL, CMD_KEEP_HIDE | CMD_CHARMED_OK },
+    { "prool",       	do_prool,    	POS_DEAD,        0,  LOG_NORMAL }, // prool
 
     /*
      * Communication commands.
@@ -1191,4 +1194,16 @@ void do_unalias(CHAR_DATA *ch, const char *argument)
 
     if (!found)
 	char_puts("No alias of that name to remove.\n",ch);
+}
+
+// prool:
+
+void do_prool(CHAR_DATA *ch, const char *argument)
+{
+char buf[1024];
+
+snprintf(buf, 1024, "\n{CGlory to {YUkraine!{x\n\nSoG MUD server compiling at %s %s\n\nplayers %i\n",
+__DATE__,__TIME__,prool_players());
+
+char_puts(buf,ch);
 }
