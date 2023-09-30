@@ -4,7 +4,7 @@ VNUMs 3000 3399
 Credits Diku~
 Security 9
 LevelRange 1 100
-ResetMessage The earth rumbles with the after affects of another experience gone away...~
+ResetMessage Midgaard zone is resetting~
 End
 
 #MOBILES
@@ -8664,6 +8664,7 @@ E 0 3350 0 16		*	a standard issue sword: wielded
 E 0 3353 0 5		*	a standard issue vest: on the body
 E 0 3355 0 4		*	a standard issue cloak: around the neck (2)
 O 0 3135 0 3005	* a fountain (The Temple Square)
+O 0 3011 0 3005 * bread
 M 0 3061 5 3006 5	* the janitor (Entrance to the Grunting Boar Inn)
 M 0 3040 1 3007 1	* the bartender (The Grunting Boar)
 G 0 3000 0		*	a barrel of beer
@@ -9172,23 +9173,7 @@ endif
 ' Beg $n! Spare some gold?
 ~
 #3026
-grumble
-' Litterbugs.
-if rand 90
-end
-endif
-' I do not get paid enough.
-if rand 20
-' All I do each day is cleanup other people's messes.
-else
-if rand 90
-end
-endif
-' Day in, day out. This is all I do in 24 hours a day.
-if rand 5
-yell I want a vacation!
-endif
-endif
+look
 ~
 #3027
 say Thank you for your kindness, $N.
