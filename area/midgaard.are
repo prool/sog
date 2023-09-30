@@ -8617,12 +8617,14 @@ The stairs lead back down to the pub.
 Z -1 3356
 S
 #3360
-Under fountain~
-Room is under fountain.
+@eng Under fountain@rus Под фонтаном~
+@eng Room is under fountain.
+@rus Это комната под фонтаном.
 ~
 0 DS inside
 D4
-Stairs up
+@eng Stairs up
+@rus Лестница вверх
 ~
 ~
 Z -1 3005
