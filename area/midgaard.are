@@ -4806,6 +4806,12 @@ D4
 ~
 ~
 Z -1 3057
+D5
+@eng Stairs down
+@rus Лестница вниз
+~
+~
+Z -1 3360
 S
 #3006
 @eng Entrance to the Grunting Boar Inn@rus Вход в таверну "Хрюкающий кабан"~
@@ -8609,6 +8615,17 @@ The stairs lead back down to the pub.
 ~
 ~
 Z -1 3356
+S
+#3360
+Under fountain~
+Room is under fountain.
+~
+0 DS inside
+D4
+Stairs up
+~
+~
+Z -1 3005
 S
 #0
 
