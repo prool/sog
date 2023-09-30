@@ -1003,7 +1003,7 @@ bool spec_guard(CHAR_DATA *ch)
 	for (victim = ch->in_room->people; victim != NULL; victim = v_next) {
 		v_next = victim->next_in_room;
 	
-		if (number_percent() < 2 && !IS_IMMORTAL(victim)) {
+		if (0/*number_percent() < 2 && !IS_IMMORTAL(victim)*/) { // prool
 			do_say(ch, "Do I know you?");
  			if (str_cmp(ch->in_room->area->name,
 				    hometown_name(victim->hometown)))

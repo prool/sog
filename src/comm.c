@@ -345,8 +345,8 @@ int main(int argc, char **argv)
 
 	boot_db();
 
-	open_sockets(&control_sockets, "ready to rock on port %d");
-	open_sockets(&info_sockets, "info service started on port %d");
+	open_sockets(&control_sockets, "SoG MUD ready to rock on port %d");
+	open_sockets(&info_sockets, "SoG MUD info service started on port %d");
 
 	if (!control_sockets.nused) {
 		log_printf("no control sockets could be opened.");
@@ -742,7 +742,7 @@ static void cp_print(DESCRIPTOR_DATA* d)
 			 i ? " " : "", i+1, codepages[i].name);
 		write_to_buffer(d, buf, 0);
 	}
-	write_to_buffer(d, "\n\rSelect your codepage (non-russian players should choose translit): ", 0);
+	write_to_buffer(d, "\n\rSelect your codepage: ", 0);
 }
 
 #if !defined(FNDELAY)

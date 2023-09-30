@@ -483,7 +483,7 @@ void print_resetmsg(AREA_DATA *pArea)
 			continue;
 
 		if (is_empty)
-			act_puts("You hear some squeaking sounds...",
+			act_puts("A zone is resetting...",
 				 ch, NULL, NULL, TO_CHAR, POS_DEAD);
 		else
 			act_puts(mlstr_cval(pArea->resetmsg, ch),
@@ -750,9 +750,11 @@ void reset_room(ROOM_INDEX_DATA *pRoom)
 		    if ((pObjIndex->limit != -1             ) &&
 		         (pObjIndex->count >= pObjIndex->limit)) {
 		        last = FALSE;
+#if 0 // prool
 		        log_printf("room_reset: room %d: obj %d: "
 				   "[P] OBJ limit reached",
 				   pRoom->vnum, pObjIndex->vnum);
+#endif
 		        break;
 		      }
 	    if (IS_SET(pObjIndex->extra_flags, ITEM_CLAN)) {
