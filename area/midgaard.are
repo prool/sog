@@ -1,5 +1,6 @@
 #AREADATA
 Name Midgaard~
+Builders prool~
 VNUMs 3000 3399
 Credits Diku~
 Security 9
@@ -8628,6 +8629,25 @@ D4
 ~
 ~
 Z -1 3005
+D5
+@eng Stairs down
+@rus Лестница вниз
+~
+~
+Z -1 3361
+S
+#3361
+@eng Level -2@rus Уровень -2~
+@eng Room in level -2
+@rus Это комната на уровне -2 (то есть на втором подземном этаже)
+~
+0 DS inside
+D4
+@eng Stairs up
+@rus Лестница вверх
+~
+~
+Z -1 3360
 S
 #0
 
