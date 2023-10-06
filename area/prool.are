@@ -1,9 +1,26 @@
 #AREADATA
 Name Prool First Area~
-VNUMs 0 0
+VNUMs 500 599
+Credits Prool~
 Security 5
 LevelRange 0 0
 End
+
+#ROOMS
+#500
+@eng Room 500@rus Комната 500~
+@eng Secret prool's room
+@rus Тайная комната Пруля
+~
+0 AD inside
+D4
+@eng Stairs up
+@rus Лестница вверх
+~
+~
+Z -1 3363
+S
+#0
 
 #HELPS
 -1 PROOLAREA~
@@ -22,6 +39,7 @@ SOLITARY       (L)  One character only can enter this room
 PET_SHOP       (M)  see addendum about pet shops
 NO_RECALL      (N)  players cannot use the 'recall' command to leave this room
                (O)  Imp only ??
+	       (R)  Newbies only
 Pet shops:  the room that the pets are to be sold in must be flagged
 act_pet.  However, the pets themselves must be loaded into the sequentially
 next room (ie if the shop is 1036, the pets MUST be loaded into 1037 for the
