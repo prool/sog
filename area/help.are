@@ -7,6 +7,30 @@ LevelRange 0 0
 End
 
 #HELPS
+-1 PROOL~
+prool - debugging command
+
+prool command shows time of compilation MUD and actual number of online players
+and show message "Glory to Ukraine"
+
+For Prool's info for imms and builders use HELP PROOL2
+~
+-1 PROOL2~
+Prool's info for imms and builders
+
+Room types:
+
+	inside city field forest hills mountain swim noswim unused air desert
+
+/prool contacts
+
+proolix @ gmail . com
+
+http://mud.kharkov.org
+http://prool.kharkov.org
+
+Prool lives at Kharkiv, Ukraine
+~
 -1 SOG 'SHADES OF GRAY' MUDDY~
 Shades of Gray is based on Anatolia MUD -- see help anatolia.
                      Original idea, concept and coding:
@@ -3188,6 +3212,9 @@ Here are the types of the damages, from small to...
 
 ~
 0 RUSSIAN~
+
+Note: Russia is a terrorist state. Putin is dickhead.
+
 This help is only for players who use russian codepages.
 
 win1251:
