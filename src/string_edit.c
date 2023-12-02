@@ -21,8 +21,18 @@
 #include <string.h>
 #include <time.h>
 
+#include "charset.h" // prool
 #include "merc.h"
 #include "olc/olc.h"
+
+// prool fool
+struct codepage 
+{
+	char* name;
+	unsigned char* from;
+	unsigned char* to;
+};
+// end of prool fool
 
 DECLARE_DO_FUN(do_replay);
 
@@ -103,6 +113,15 @@ void string_add(CHAR_DATA *ch, const char *argument)
 	const char *p;
 	size_t len;
         char arg1[MAX_INPUT_LENGTH];
+
+// prool: if codepage UTF8 then recoding utf8->koi8
+	if (ch->desc->codepage->from == utf_koi8)
+		{
+		char prool_buf[MAX_STRING_LENGTH];
+		for (int i=0;i<MAX_STRING_LENGTH;i++) prool_buf[i]=0;
+		utf8_to_koi(argument, prool_buf);
+		strcpy(argument, prool_buf);
+		}
 
     /*
      * Thanks to James Seng

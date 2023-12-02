@@ -628,7 +628,7 @@ void game_loop_unix(void)
 
 				if (d->showstr_point)
 					show_string(d, d->incomm);
-				else if (d->pString)
+				else if (d->pString) // prool: text editor here
 					string_add(d->character, d->incomm);
 				else if (d->connected == CON_PLAYING) {
 					if (!run_olc_editor(d))
