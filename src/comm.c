@@ -84,10 +84,6 @@
 #include <time.h>
 #include <iconv.h> // for UTF
 
-#if defined(SUNOS) || defined(SVR4) || defined(LINUX)
-#	include <crypt.h>
-#endif
-
 #include "merc.h"
 #include "interp.h"
 #include "quest.h"

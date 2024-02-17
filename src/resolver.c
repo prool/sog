@@ -40,6 +40,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include "typedef.h"
 #include "log.h"
 #include "resolver.h"

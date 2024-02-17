@@ -47,10 +47,6 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#ifndef BSD44
-#include <malloc.h>
-#endif
-
 #include "merc.h"
 #include "quest.h"
 #include "db/db.h"

@@ -59,10 +59,6 @@
 #include "obj_prog.h"
 #include "fight.h"
 
-#if defined(SUNOS) || defined(SVR4) || defined(LINUX)
-#	include <crypt.h>
-#endif
-
 /* command procedures needed */
 DECLARE_DO_FUN(do_exits		);
 DECLARE_DO_FUN(do_look		);
