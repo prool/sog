@@ -2865,11 +2865,11 @@ IAC,SE);
 
 	if (getpeername(t->descriptor, (struct sockaddr *) &sock, &size) < 0) 
 	{
-		log_printf("prool debug MSSP module: getpeername: %s", strerror(errno));
+		log_printf("SoG MUD: prool debug: MSSP module: getpeername: %s", strerror(errno));
 	}
 	else
 	{
-	log_printf("prool debug: MSSP: sock.sin_addr: %s", inet_ntoa(sock.sin_addr));
+	log_printf("SoG MUD: prool debug: MSSP: sock.sin_addr: %s", inet_ntoa(sock.sin_addr));
 	}
 
 write_to_descriptor(t->descriptor, buf, 0/*strlen(buf)*/);
