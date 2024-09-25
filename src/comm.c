@@ -105,6 +105,7 @@ int prool_players ();
 unsigned char mssp_will[] = {(char) IAC, (char) WILL, (char) MSSP, '\0'};
 unsigned char eor_on_str      [] = { IAC, WILL, TELOPT_EOR, '\0' };
 long	boot_time;
+char *nslookup(const char *ip);
 // end prool
 
 DESCRIPTOR_DATA	*	new_descriptor	(void);
@@ -2869,7 +2870,7 @@ IAC,SE);
 	}
 	else
 	{
-	log_printf("SoG MUD: prool debug: MSSP: sock.sin_addr: %s", inet_ntoa(sock.sin_addr));
+	log_printf("SoG MUD: prool debug: MSSP: sock.sin_addr: %s %s", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
 	}
 
 write_to_descriptor(t->descriptor, buf, 0/*strlen(buf)*/);
@@ -2889,4 +2890,25 @@ int prool_players ()
 
 		}
 return count;
+}
+
+char *nslookup(const char *ip) // prool
+// example: input "217.12.192.65", returned output "www.itl.ua"
+{
+struct in_addr ip0;
+struct hostent *hp;
+
+if (!inet_aton(ip, &ip0))
+	{/* printf("can't parse IP address %s", ip) */; }
+
+if ((hp = gethostbyaddr((const char *)&ip0, sizeof ip0, AF_INET)) == NULL)
+	{/* printf("no name associated with %s", ip) */; }
+
+// printf("name associated with %s is %s\n", ip, hp->h_name);
+
+#ifdef CYGWIN
+return (char *)((hp!=NULL)?hp->h_name:(char *)"*");
+#else
+return (hp!=NULL)?hp->h_name:(char *)"*";
+#endif
 }
