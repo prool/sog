@@ -106,6 +106,9 @@ unsigned char mssp_will[] = {(char) IAC, (char) WILL, (char) MSSP, '\0'};
 unsigned char eor_on_str      [] = { IAC, WILL, TELOPT_EOR, '\0' };
 long	boot_time;
 char *nslookup(const char *ip);
+char *ptime(void);
+unsigned int prool_ports[100];
+int prool_ports_empty;
 // end prool
 
 DESCRIPTOR_DATA	*	new_descriptor	(void);
@@ -229,15 +232,20 @@ static void open_sockets(varr *v, const char *logm)
 {
 	int i, j;
 
+	int prools_i=0; //prool
+
 	for (i = 0, j = 0; i < v->nused; i++) {
-		int port = GETINT(v, i);
 		int sock;
+		int port = GETINT(v, i);
+		if (prool_ports_empty) prool_ports[prools_i++]=port;
+		//printf("prool debug: port %i\n", port); // prool
 		if ((sock = init_socket(port)) < 0)
 			continue;
 		log_printf(logm, port);
 		GETINT(v, j++) = sock;
 	}
 	v->nused = j;
+	prool_ports_empty=0;
 }
 
 void close_sockets(varr *v)
@@ -342,6 +350,7 @@ int main(int argc, char **argv)
 
 	boot_db();
 
+	prool_ports_empty=1;
 	open_sockets(&control_sockets, "SoG MUD ready to rock on port %d");
 	open_sockets(&info_sockets, "SoG MUD info service started on port %d");
 
@@ -753,6 +762,8 @@ void init_descriptor(int control)
 	int desc;
 	int size;
 	HELP_DATA *greeting;
+
+	printf("%s prool debug fd %i port %i ", ptime(), control, prool_ports[control-4]); // prool
 
 	size = sizeof(sock);
 	getsockname(control, (struct sockaddr *) &sock, &size);
@@ -2870,7 +2881,7 @@ IAC,SE);
 	}
 	else
 	{
-	log_printf("SoG MUD: prool debug: MSSP: sock.sin_addr: %s %s", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
+	printf(" MSSP: %s %s\n", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
 	}
 
 write_to_descriptor(t->descriptor, buf, 0/*strlen(buf)*/);
@@ -2892,7 +2903,7 @@ int prool_players ()
 return count;
 }
 
-char *nslookup(const char *ip) // prool
+char *nslookup(const char *ip)
 // example: input "217.12.192.65", returned output "www.itl.ua"
 {
 struct in_addr ip0;
@@ -2910,5 +2921,24 @@ if ((hp = gethostbyaddr((const char *)&ip0, sizeof ip0, AF_INET)) == NULL)
 return (char *)((hp!=NULL)?hp->h_name:(char *)"*");
 #else
 return (hp!=NULL)?hp->h_name:(char *)"*";
+#endif
+}
+
+char gluck[] = "(ptime gluck?)";
+
+char *ptime(void)
+{
+#if 0 // 0 - normal ptime() 1 - ptime disabled bikoz probable gluck
+		return gluck;
+#else
+	char *tmstr;
+	time_t mytime;
+
+	mytime = time(0);
+
+	tmstr = (char *) asctime(localtime(&mytime));
+	*(tmstr + strlen(tmstr) - 1) = '\0';
+
+	return tmstr;
 #endif
 }
