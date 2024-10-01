@@ -39,8 +39,11 @@ Hеразумные - игнорируются и обрабатываются �
 
 From Prool:
 
-run MUD
+Simplest run MUD
 
 bin/sog -p <main port> -i <info port>
 
-Prool, Kharkiv, Ukraine, year 2023
+'prool' branch - my some modifications
+
+Prool, october 2024, Duisburg, Deutschland
+
