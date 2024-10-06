@@ -97,6 +97,7 @@
 #include "db/lang.h"
 
 // begin prool
+char *version(void);
 void mssp_start(DESCRIPTOR_DATA * t);
 int prool_players ();
 #define MSSP			70
@@ -295,6 +296,8 @@ int main(int argc, char **argv)
 	 * Run the game.
 	 */
 	
+	log_printf("SoG MUD compiling %s", version()); // prool
+
 #if defined (WIN32)
 	srand((unsigned) time(NULL));
 	err = WSAStartup(wVersionRequested, &wsaData); 

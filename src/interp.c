@@ -1198,13 +1198,18 @@ void do_unalias(CHAR_DATA *ch, const char *argument)
 
 // prool:
 
+char *version(void)
+{
+return (__DATE__ " " __TIME__);
+}
+
 void do_prool(CHAR_DATA *ch, const char *argument)
 {
 char buf[1024];
 extern char str_boot_time[];
 
-snprintf(buf, 1024, "\nSoG MUD Server compiling at %s %s\n\nplayers now %i\n",
-__DATE__,__TIME__,prool_players());
+snprintf(buf, 1024, "\nSoG MUD Server compiling at %s\n\nplayers now %i\n",
+version(),prool_players());
 char_puts(buf,ch);
 
         char_printf(ch, "\nCrusify started up at %s\n"

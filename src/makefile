@@ -1,13 +1,13 @@
 #
 # $Id: Makefile.dist,v 1.7 1999/04/15 10:45:43 fjoe Exp $
 #
-# prool: tested in Ubuntu 20.04
+# prool: tested in Ubuntu 20.04, 22.04
 #
 CC		= gcc
 LD		= gcc
 INCLUDES	= -I .
 
-CFLAGS		= -g -Wall -O -pipe $(INCLUDES)
+CFLAGS		= -g -Wall -O -pipe $(INCLUDES) -Wno-discarded-qualifiers
 LFLAGS		= -g
 LIBS		=
 INSTALL_PATH	= ..
@@ -88,6 +88,7 @@ sog: $(OFILES)
 	rm -f sog
 	$(LD) $(LFLAGS) -o sog $(OFILES) $(LIBS)
 	cp sog ../bin
+	rm -f interp.o
 
 .c.o: 
 	$(CC) $(CFLAGS) -c $<
