@@ -1201,9 +1201,20 @@ void do_unalias(CHAR_DATA *ch, const char *argument)
 void do_prool(CHAR_DATA *ch, const char *argument)
 {
 char buf[1024];
+extern char str_boot_time[];
 
-snprintf(buf, 1024, "\n{CGlory to {YUkraine!{x\n\nSoG MUD server compiling at %s %s\n\nplayers %i\n",
+snprintf(buf, 1024, "\nSoG MUD Server compiling at %s %s\n\nplayers now %i\n",
 __DATE__,__TIME__,prool_players());
-
 char_puts(buf,ch);
+
+        char_printf(ch, "\nCrusify started up at %s\n"
+                        "The system time is %s.\n",
+                        str_boot_time, strtime(time(NULL)));
+
+                if (reboot_counter == -1)
+                        char_printf(ch, "Automatic rebooting is inactive.\n");
+                else
+                        char_printf(ch, "Reboot in %i minutes.\n",
+                                    reboot_counter);
+
 }
