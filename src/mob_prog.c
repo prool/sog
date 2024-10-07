@@ -1133,7 +1133,7 @@ void mp_act_trigger(const char *argument, CHAR_DATA *mob, CHAR_DATA *ch,
 		    const void *arg1, const void *arg2, int type)
 {
 	MPTRIG *mptrig;
-	char *l = strlwr(argument);
+	char *l = strlwr_(argument);
 
 	for (mptrig = mob->pIndexData->mptrig_list; mptrig; mptrig = mptrig->next) {
 		bool match;
