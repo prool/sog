@@ -41,9 +41,6 @@ char *	strnzcpy(char *dest, size_t len, const char *src);
 		strnzcpy((dest), UMIN((len), (count)+1), (src))
 char *	strnzcat(char *dest, size_t len, const char *src);
 char *	strnzncat(char *dest, size_t len, const char *src, size_t count);
-#if !defined (WIN32)
-char *	strlwr(const char *s);
-#endif
 
 int	str_cmp		(const char *astr, const char *bstr);
 int	str_ncmp	(const char *astr, const char *bstr, size_t len);
