@@ -86,6 +86,7 @@
 #define SKILLS_CONF	"skills.conf"	/* skills */
 #define SOCIALS_CONF	"socials.conf"	/* socials */
 #define SYSTEM_CONF	"system.conf"	/* system configuration */
+#define PROOL_CONF	"prool.conf"	/* prool configuration */
 #define LANG_CONF	"lang.conf"	/* lang definitions */
 #define MSG_FILE	"msgdb.txt"	/* msg db */
 

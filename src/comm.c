@@ -98,11 +98,13 @@
 
 // begin prool
 char *version(void);
+void prool_cfg_load(void);
 void mssp_start(DESCRIPTOR_DATA * t);
 int prool_players ();
 #define MSSP			70
 #define MSSP_VAR		1
 #define MSSP_VAL		2
+#define PROOL_MAX_STRLEN	512
 unsigned char mssp_will[] = {(char) IAC, (char) WILL, (char) MSSP, '\0'};
 unsigned char eor_on_str      [] = { IAC, WILL, TELOPT_EOR, '\0' };
 long	boot_time;
@@ -110,6 +112,10 @@ char *nslookup(const char *ip);
 char *ptime(void);
 unsigned int prool_ports[100];
 int prool_ports_empty;
+char ServerIP [PROOL_MAX_STRLEN];
+char Website [PROOL_MAX_STRLEN];
+char Email [PROOL_MAX_STRLEN];
+char Hostname [PROOL_MAX_STRLEN];
 // end prool
 
 DESCRIPTOR_DATA	*	new_descriptor	(void);
@@ -310,6 +316,8 @@ int main(int argc, char **argv)
 #endif
 
 	boot_db_system();
+
+	prool_cfg_load();
 
 	if (argc > 1) {
 		/*
@@ -766,7 +774,7 @@ void init_descriptor(int control)
 	int size;
 	HELP_DATA *greeting;
 
-	printf("%s prool debug fd %i port %i ", ptime(), control, prool_ports[control-4]); // prool
+	//printf("%s prool debug fd %i port %i ", ptime(), control, prool_ports[control-4]); // prool
 
 	size = sizeof(sock);
 	getsockname(control, (struct sockaddr *) &sock, &size);
@@ -2817,16 +2825,16 @@ struct sockaddr_in sock;
 
 i=sprintf(buf,
 "%c%c%c%cPLAYERS%c%i%cNAME%cShades of Gray%cUPTIME%c%li%cCRAWL_DELAY%c-1\
-%cHOSTNAME%cmud.kharkov.org\
-%cPORT%c9000\
+%cHOSTNAME%c%s\
+%cPORT%c%i\
 %cCODEBASE%cAnatolia\
-%cCONTACT%cproolix@gmail.com\
+%cCONTACT%c%s\
 %cCREATED%c2023\
-%cIP%c195.123.245.173\
+%cIP%c%s\
 %cLANGUAGE%cEnglish\
-%cLOCATION%cUkraine\
+%cLOCATION%cEarth\
 %cMINIMUM AGE%c0\
-%cWEBSITE%chttp://mud.kharkov.org\
+%cWEBSITE%c%s\
 %cFAMILY%cDikuMUD\
 %cAREAS%c%i\
 %cMOBILES%c%i\
@@ -2847,16 +2855,16 @@ i=sprintf(buf,
 %c%c",
 IAC,SB,MSSP,MSSP_VAR,MSSP_VAL,prool_players(),MSSP_VAR,MSSP_VAL,MSSP_VAR,MSSP_VAL,(long int)boot_time,
 MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,Hostname,
+MSSP_VAR,MSSP_VAL,prool_ports[0],
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,Email,
+MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,ServerIP,
 MSSP_VAR,MSSP_VAL,
 MSSP_VAR,MSSP_VAL,
 MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
-MSSP_VAR,MSSP_VAL,
+MSSP_VAR,MSSP_VAL,Website,
 MSSP_VAR,MSSP_VAL,
 MSSP_VAR,MSSP_VAL,134 /*statistic_zones*/,
 MSSP_VAR,MSSP_VAL,0 /*statistic_mobs*/,
@@ -2884,7 +2892,7 @@ IAC,SE);
 	}
 	else
 	{
-	printf(" MSSP: %s %s\n", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
+	log_printf("SoG MUD: MSSP: %s %s", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
 	}
 
 write_to_descriptor(t->descriptor, buf, 0/*strlen(buf)*/);
@@ -2944,4 +2952,57 @@ char *ptime(void)
 
 	return tmstr;
 #endif
+}
+
+void prool_cfg_load(void) // code from Virtustan MUD
+{
+FILE *fconfig;
+char string [PROOL_MAX_STRLEN];
+char *c1;
+char *cp;
+
+ServerIP[0]=0;
+Website[0]=0;
+Email[0]=0;
+Hostname[0]=0;
+
+fconfig=fopen(ETC_PATH "/" PROOL_CONF,"r");
+if (fconfig)
+	{
+	log_printf("Using prool.cfg");
+	while (!feof(fconfig))
+		{char *cp;
+		string[0]=0;
+		fgets(string,PROOL_MAX_STRLEN,fconfig);
+		cp=strchr(string,'\n');
+		if (cp) *cp=0;
+		// printf("`%s'\n", string); // debug print
+		if (!strcmp(string,"test")) printf("TEST OK!\n");
+		else if (!memcmp(string,"IP ",strlen("IP ")))
+			{
+			c1=string;
+			strcpy(ServerIP, c1+strlen("IP "));
+			log_printf("config: Server IP %s", ServerIP);
+			}
+		else if (!memcmp(string,"WEBSITE ",strlen("WEBSITE ")))
+			{
+			c1=string;
+			strcpy(Website, c1+strlen("WEBSITE "));
+			log_printf("config: website %s", Website);
+			}
+		else if (!memcmp(string,"EMAIL ",strlen("EMAIL ")))
+			{
+			c1=string;
+			strcpy(Email, c1+strlen("EMAIL "));
+			log_printf("config: e-mail %s", Email);
+			}
+		else if (!memcmp(string,"HOSTNAME ",strlen("HOSTNAME ")))
+			{
+			c1=string;
+			strcpy(Hostname, c1+strlen("HOSTNAME "));
+			log_printf("config: e-mail %s", Hostname);
+			}
+		}
+	fclose(fconfig);
+	}
 }
