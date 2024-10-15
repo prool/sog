@@ -194,7 +194,7 @@ OLC_FUN(areaed_list)
 	one_argument(argument, arg, sizeof(arg));
 
 	for (pArea = area_first; pArea; pArea = pArea->next) {
-		if (arg[0] != '\0' && !strstr(strlwr_(pArea->name), arg))
+		if (arg[0] != '\0' && !strstr(strlwr(pArea->name), arg))
 			continue;
 
 		if (output == NULL) {
