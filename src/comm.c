@@ -766,7 +766,7 @@ void init_descriptor(int control)
 	int size;
 	HELP_DATA *greeting;
 
-	printf("%s prool debug fd %i port %i ", ptime(), control, prool_ports[control-4]); // prool
+	//printf("%s prool debug fd %i port %i ", ptime(), control, prool_ports[control-4]); // prool
 
 	size = sizeof(sock);
 	getsockname(control, (struct sockaddr *) &sock, &size);
@@ -2817,16 +2817,16 @@ struct sockaddr_in sock;
 
 i=sprintf(buf,
 "%c%c%c%cPLAYERS%c%i%cNAME%cShades of Gray%cUPTIME%c%li%cCRAWL_DELAY%c-1\
-%cHOSTNAME%cmud.kharkov.org\
-%cPORT%c9000\
+%cHOSTNAME%cmud.virtustan.net\
+%cPORT%c8888\
 %cCODEBASE%cAnatolia\
 %cCONTACT%cproolix@gmail.com\
 %cCREATED%c2023\
-%cIP%c195.123.245.173\
+%cIP%c95.217.157.136\
 %cLANGUAGE%cEnglish\
-%cLOCATION%cUkraine\
+%cLOCATION%cEurope\
 %cMINIMUM AGE%c0\
-%cWEBSITE%chttp://mud.kharkov.org\
+%cWEBSITE%chttp://mud.virtustan.net\
 %cFAMILY%cDikuMUD\
 %cAREAS%c%i\
 %cMOBILES%c%i\
@@ -2884,7 +2884,7 @@ IAC,SE);
 	}
 	else
 	{
-	printf(" MSSP: %s %s\n", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
+	log_printf("SoG MUD: MSSP: %s %s", inet_ntoa(sock.sin_addr), nslookup(inet_ntoa(sock.sin_addr)));
 	}
 
 write_to_descriptor(t->descriptor, buf, 0/*strlen(buf)*/);
