@@ -39,11 +39,20 @@ Hеразумные - игнорируются и обрабатываются �
 
 From Prool:
 
-Simplest run MUD
+History:
+
+Diku -> Merc -> ROM -> Anatolia -> SoG -> Shadow Realms
+
+Simplest run MUD:
 
 bin/sog -p <main port> -i <info port>
 
+MUD client musst connected to main port
+
 'prool' branch - my some modifications
 
-Prool, october 2024, Duisburg, Deutschland
+Windows binaries here https://mud.kharkov.org/files/windows7-binaries/sogmud/
 
+Prool, 2024-2026, Duisburg, Deutschland
+
+Glory for Ukraine!
